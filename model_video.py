@@ -3,6 +3,7 @@ from torch import nn
 from torch.nn import Module
 import torch
 from audioUtils.hparams import hparams
+from kan_convs import KANLayer
 
 class MyUpsample(Module):
     __constants__ = ['size', 'scale_factor', 'mode', 'align_corners', 'name']
