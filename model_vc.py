@@ -34,13 +34,13 @@
             kernel_size = 3  # Define kernel_size here
 
             self.layers = nn.Sequential(
-                KANConv1DLayer(input_channels, layer_sizes[0], spline_order, kernel_size, groups=1, padding=1, stride=1,
+                KANLayer(input_channels, layer_sizes[0], spline_order, kernel_size, groups=1, padding=1, stride=1,
                             dilation=1),
-                KANConv1DLayer(layer_sizes[0], layer_sizes[1], spline_order, kernel_size, groups=groups, padding=1,
+                KANLayer(layer_sizes[0], layer_sizes[1], spline_order, kernel_size, groups=groups, padding=1,
                             stride=2, dilation=1),
-                KANConv1DLayer(layer_sizes[1], layer_sizes[2], spline_order, kernel_size, groups=groups, padding=1,
+                KANLayer(layer_sizes[1], layer_sizes[2], spline_order, kernel_size, groups=groups, padding=1,
                             stride=2, dilation=1),
-                KANConv1DLayer(layer_sizes[2], layer_sizes[3], spline_order, kernel_size, groups=groups, padding=1,
+                KANLayer(layer_sizes[2], layer_sizes[3], spline_order, kernel_size, groups=groups, padding=1,
                             stride=1, dilation=1),
                 nn.AdaptiveAvgPool1d((1,))
             )
