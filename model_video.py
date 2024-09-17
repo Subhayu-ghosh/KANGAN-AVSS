@@ -26,7 +26,41 @@ class MyUpsample(Module):
         info += ', mode=' + self.mode
         return info
 
+class SimpleConvKAN1D(nn.Module):
+        def __init__(
+                self,
+                layer_sizes,
+                num_classes: int = 10,
+                input_channels: int = 1,
+                spline_order: int = 3,
+                groups: int = 1):
+            super(SimpleConvKAN1D, self).__init__()
 
+            kernel_size = 3  # Define kernel_size here
+
+            self.layers = nn.Sequential(
+                KANLayer(input_channels, layer_sizes[0], spline_order, kernel_size, groups=1, padding=1, stride=1,
+                            dilation=1),
+                KANLayer(layer_sizes[0], layer_sizes[1], spline_order, kernel_size, groups=groups, padding=1,
+                            stride=2, dilation=1),
+                KANLayer(layer_sizes[1], layer_sizes[2], spline_order, kernel_size, groups=groups, padding=1,
+                            stride=2, dilation=1),
+                KANLayer(layer_sizes[2], layer_sizes[3], spline_order, kernel_size, groups=groups, padding=1,
+                            stride=1, dilation=1),
+                nn.AdaptiveAvgPool1d((1,))
+            )
+
+            self.output = nn.Linear(layer_sizes[3], num_classes)
+
+            self.drop = nn.Dropout(p=0.25)
+
+        def forward(self, x):
+            x = self.layers(x)
+            x = torch.flatten(x, 1)
+            x = self.drop(x)
+            x = self.output(x)
+            return x
+            
 class VideoGenerator(nn.Module):
     # initializers
     def __init__(self, d=128, dim_neck=32, use_window=True, use_256=False):
